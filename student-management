@@ -1,0 +1,76 @@
+-- Drop existing tables
+DROP TABLE IF EXISTS student_performance;
+DROP TABLE IF EXISTS attendance;
+DROP TABLE IF EXISTS courses;
+DROP TABLE IF EXISTS students;
+DROP TABLE IF EXISTS departments;
+
+-- Create the tables again
+CREATE TABLE departments (
+    department_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    department_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE students (
+    student_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_name VARCHAR(100) NOT NULL,
+    student_address VARCHAR(255),
+    department_id INTEGER,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
+);
+
+CREATE TABLE courses (
+    course_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    course_name VARCHAR(100) NOT NULL,
+    department_id INTEGER,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
+);
+
+CREATE TABLE student_performance (
+    performance_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER,
+    course_id INTEGER,
+    grade VARCHAR(2),
+    FOREIGN KEY (student_id) REFERENCES students(student_id),
+    FOREIGN KEY (course_id) REFERENCES courses(course_id)
+);
+
+CREATE TABLE attendance (
+    attendance_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER,
+    course_id INTEGER,
+    attendance_count INTEGER,
+    FOREIGN KEY (student_id) REFERENCES students(student_id),
+    FOREIGN KEY (course_id) REFERENCES courses(course_id)
+);
+ -- Insert data into the departments table
+INSERT INTO departments (department_name) VALUES ('Computer Science');
+INSERT INTO departments (department_name) VALUES ('Mechanical Engineering');
+INSERT INTO departments (department_name) VALUES ('Electrical Engineering');
+-- Insert data into the students table, make sure department_id exists
+INSERT INTO students (student_name, student_address, department_id) 
+VALUES ('John Doe', '123 Main St', 1);  -- 1 corresponds to 'Computer Science'
+
+INSERT INTO students (student_name, student_address, department_id) 
+VALUES ('Jane Smith', '456 Park Ave', 2);  -- 2 corresponds to 'Mechanical Engineering'
+-- Insert data into the courses table, make sure department_id exists
+INSERT INTO courses (course_name, department_id) VALUES ('Data Structures', 1); -- Computer Science course
+INSERT INTO courses (course_name, department_id) VALUES ('Thermodynamics', 2); -- Mechanical Engineering course
+-- Insert data into the student_performance table
+INSERT INTO student_performance (student_id, course_id, grade) 
+VALUES (1, 1, 'A');  -- John Doe took Data Structures and got A
+
+INSERT INTO student_performance (student_id, course_id, grade) 
+VALUES (2, 2, 'B');  -- Jane Smith took Thermodynamics and got B
+-- Insert data into the attendance table
+INSERT INTO attendance (student_id, course_id, attendance_count) 
+VALUES (1, 1, 20);  -- John Doe attended Data Structures 20 times
+
+INSERT INTO attendance (student_id, course_id, attendance_count) 
+VALUES (2, 2, 18);  -- Jane Smith attended Thermodynamics 18 times
+
+SELECT * FROM students;
+SELECT * FROM courses;
+SELECT * FROM student_performance;
+SELECT * FROM attendance;
+SELECT * FROM departments;
